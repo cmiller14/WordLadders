@@ -11,10 +11,15 @@ public class LadderGamePriority extends LadderGame {
         // need to make a priority queue which is the AVL tree
         AVLTree<WordInfoPriority> priorityQueue = new AVLTree<WordInfoPriority>();
 
-        WordInfoPriority foundWord = prioritySearch(priorityQueue, start, end);
+        if (sameSize(start, end) && inDictionary(listOfWordLists, start, end)) {
+            // find the correct word ladder
+            WordInfoPriority foundWordLadder = prioritySearch(priorityQueue, start, end);
+            // now I need to print out everything I need
+            printBanner(start, end, foundWordLadder);
 
-        printBanner(start, end, foundWord);
-
+        } else {
+            System.out.println("No ladder was found");
+        }
 
     }
 
@@ -63,11 +68,8 @@ public class LadderGamePriority extends LadderGame {
                     usedWords.insert(candidate.toPrevious());
                     enqueues++;
                 }
-
             }
-
         }
-
         return foundWord;
 
     }
@@ -79,9 +81,6 @@ public class LadderGamePriority extends LadderGame {
         int moves = foundLadder.getMoves();
         System.out.printf("Seeking A* solution from %s -> %s \n", start, end);
         System.out.printf("[%s] total enqueues %d\n", history, enqueues);
-   
-
-
 
     }
 
