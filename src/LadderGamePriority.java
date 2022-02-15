@@ -11,7 +11,6 @@ public class LadderGamePriority extends LadderGame {
         // need to make a priority queue which is the AVL tree
         AVLTree<WordInfoPriority> priorityQueue = new AVLTree<WordInfoPriority>();
 
-
         WordInfoPriority foundWord = prioritySearch(priorityQueue, start, end);
 
         printBanner(start, end, foundWord);
@@ -21,7 +20,10 @@ public class LadderGamePriority extends LadderGame {
 
 
     private WordInfoPriority prioritySearch(AVLTree priorityQueue, String start, String end) {
-        priorityQueue.insert(new WordInfoPriority(start, 0, diff(start,end)));
+        priorityQueue.insert(new WordInfoPriority(start, 0, diff(start,end), start, 0));
+
+        AVLTree<WordInfoPrevious> usedWords = new AVLTree<>();
+        usedWords.insert(new WordInfoPrevious(start, 0, diff(start,end), start, 0 ));
 
 
         Boolean found = false;
@@ -40,23 +42,25 @@ public class LadderGamePriority extends LadderGame {
                         word,
                         moves,
                         diff(end,word) + moves,
-                        currentWord.getHistory() + word + " ",
+                        currentWord.getHistory()+ " " + word,
                         enqueues
                 );
                 if (word.equals(end)) {
                     found = true;
                     foundWord = candidate;
                 }
-                if (priorityQueue.contains(candidate)) {
-                    WordInfoPriority existingWord = (WordInfoPriority)priorityQueue.find(candidate);
-                    int compare = candidate.compareTo(existingWord);
-                    if (compare < 0) {
+                if (usedWords.contains(candidate.toPrevious())) {
+                    WordInfoPrevious existingWord = usedWords.find(candidate.toPrevious());
+                    if (candidate.getEstimatedWork() < existingWord.getEstimatedWork()) {
+                        usedWords.remove(existingWord);
+                        usedWords.insert(candidate.toPrevious());
                         priorityQueue.insert(candidate);
                         enqueues++;
                     }
                 }
                 else {
                     priorityQueue.insert(candidate);
+                    usedWords.insert(candidate.toPrevious());
                     enqueues++;
                 }
 
@@ -72,10 +76,10 @@ public class LadderGamePriority extends LadderGame {
     private void printBanner(String start, String end, WordInfoPriority foundLadder) {
         String history = foundLadder.getHistory();
         int enqueues = foundLadder.getEnqueues();
-
+        int moves = foundLadder.getMoves();
         System.out.printf("Seeking A* solution from %s -> %s \n", start, end);
         System.out.printf("[%s] total enqueues %d\n", history, enqueues);
-        System.out.println();
+   
 
 
 

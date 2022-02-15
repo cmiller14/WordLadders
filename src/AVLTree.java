@@ -71,6 +71,30 @@ public class AVLTree<E extends Comparable<? super E>> {
 
     }
 
+    public void remove(E value) {
+        remove(value, root);
+    }
+
+    private AvlNode remove(E value, AvlNode node) {
+        if (node == null) {
+            return node;
+        }
+
+        int compareResult = value.compareTo(node.value);
+
+        if (compareResult < 0) {
+            node.left = remove(value, node.left);
+        } else if (compareResult > 0) {
+            node.right = remove(value, node.right);
+        } else if (node.left != null & node.right != null) {
+            node.value = findMin(node.right).value;
+            node.right = remove(node.value, node.right);
+        } else {
+            node = ( node.left != null ) ? node.left : node.right;
+        }
+        return balance(node);
+    }
+
     /**
      * Find the largest item in the tree.
      *
@@ -83,6 +107,28 @@ public class AVLTree<E extends Comparable<? super E>> {
 
         return findMax(root).value;
     }
+
+     public boolean isIn(String word) {
+        return isIn(word, root);
+     }
+
+     private boolean isIn(String word, AvlNode node) {
+         while (node != null) {
+
+             int compareResult = word.compareTo(node.value.toString());
+
+             if (compareResult < 0) {
+                 node = node.left;
+             } else if (compareResult > 0) {
+                 node = node.right;
+             } else {
+                 return true;    // Match
+             }
+         }
+
+         return false;   // No match
+
+     }
 
     /**
      * Find an item in the tree.

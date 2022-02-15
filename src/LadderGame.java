@@ -138,4 +138,41 @@ public abstract class LadderGame {
     }
 
     public abstract void play(String start, String end);
+
+    protected boolean sameSize(String start, String end) {
+        int startLength = start.length();
+        int endLength = end.length();
+        boolean sameSize = false;
+
+        if(startLength == endLength) {
+            sameSize = true;
+        }
+
+        return sameSize;
+    }
+
+    protected boolean inDictionary(ArrayList<ArrayList<String>> dictionary, String start, String end) {
+
+        boolean inDictionary = false;
+        //verify if both the start and end words are in the dictionary
+        if (findWord(dictionary,start) && findWord(dictionary,end)) {
+            inDictionary = true;
+        }
+
+        return inDictionary;
+
+    }
+
+    private boolean findWord(ArrayList<ArrayList<String>> dictionary,String word) {
+        boolean exists = false;
+        // loops through the dictionary to find if the word exists
+        for (ArrayList<String> list : dictionary) {
+            for (String listWord : list) {
+                if (listWord.equals(word)) {
+                    exists = true;
+                }
+            }
+        }
+        return exists;
+    }
 }

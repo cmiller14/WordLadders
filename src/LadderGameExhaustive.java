@@ -35,13 +35,16 @@ public class LadderGameExhaustive extends LadderGame {
 
         String history = foundWordLadder.getHistory();
         String[] words = history.split(" ");
+        int enqueues = foundWordLadder.getEnqueues();
 
         if (foundWordLadder.getEnqueues() == 1) {
             System.out.printf("%s -> %s : No ladder was found\n",
                     start, end);
         } else {
-            System.out.printf("%s -> %s : %d Moves [%s] total enqueues %d\n",
-                    start, end, foundWordLadder.getMoves(), history , foundWordLadder.getEnqueues());
+            System.out.printf("Seeking exhaustive solution from %s -> %s\n", start,end);
+            System.out.printf("[%s] total enqueues %d\n", history, enqueues );
+//            System.out.printf("%s -> %s : %d Moves [%s] total enqueues %d\n",
+//                    start, end, foundWordLadder.getMoves(), history , foundWordLadder.getEnqueues());
         }
 
     }
@@ -77,29 +80,7 @@ public class LadderGameExhaustive extends LadderGame {
         return foundWord;
     }
 
-    private boolean sameSize(String start, String end) {
-        int startLength = start.length();
-        int endLength = end.length();
-        boolean sameSize = false;
 
-        if(startLength == endLength) {
-            sameSize = true;
-        }
-
-        return sameSize;
-    }
-
-    private boolean inDictionary(ArrayList<ArrayList<String>> dictionary, String start, String end) {
-
-        boolean inDictionary = false;
-        //verify if both the start and end words are in the dictionary
-        if (findWord(dictionary,start) && findWord(dictionary,end)) {
-            inDictionary = true;
-        }
-
-        return inDictionary;
-
-    }
 
     private boolean findWord(ArrayList<ArrayList<String>> dictionary,String word) {
         boolean exists = false;
